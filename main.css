@@ -1,0 +1,44 @@
+html {
+  background: #f5f6f5;
+  font-size: 14px;
+}
+
+body {
+  max-width: 25em;
+  padding: 2em;
+  margin: 0 auto;
+  text-align: center;
+}
+
+#audio-selector {
+  margin-top: 5em;
+  font-size: 1.5em;
+}
+
+#audio-player {
+  margin-top: 2em;
+  padding: 1em;
+  border: 1px solid #c9c9c9;
+  border-radius: 5px;
+}
+
+input, button {
+  font-size: 2em;
+  width: 2em;
+  text-align: center;
+  padding: 0.5em;
+}
+
+input {
+  padding-right: 0.2em;
+}
+
+.hidden {
+  display: none;
+}
+
+@media only screen and (min-width: 480px) {
+  html {
+    font-size: 18px;
+  }
+}
