@@ -14,12 +14,8 @@
 
   <form id="audio-selector">
     <input type="number" min="1" step="1" name="audioKey"></input>
-    <button type="submit">&#9658;</button>
+    <button type="submit" data-play-icon="&#9658;" data-pause-icon="&#9724;">&#9658;</button>
   </form>
-  <div id="audio-player" class="hidden">
-    <p>Valgt lydklipp <span>0</span></p>
-    <p><button data-play-icon="&#9658;" data-pause-icon="&#9724;"></button><p>
-  </div>
   
   <audio data-key="1" src="audio/1 Storgata.mp3"></audio>
   <audio data-key="2" src="audio/2 Brugata.mp3"></audio>
@@ -31,110 +27,56 @@
 
 <script>
 
-  function playAudio(audioKey) {
-    for(let audio of audios) {
-      audio.currentTime = 0;
-      if(audioKey == audio.getAttribute('data-key')) {
-        audio.play();
-      } else {
-        audio.pause();
-      }
-    }
+  var playlist = document.querySelectorAll('audio');
+
+  for(var track of playlist) {
+    track.addEventListener('play', audioEvent);
+    track.addEventListener('playing', audioEvent);
+    track.addEventListener('pause', audioEvent);
+    track.addEventListener('ended', audioEvent)
   }
 
-  function togglePlaying() {
-    for(let audio of audios) {
-      if(!audio.paused) {
-        audio.pause();
-      } else if(audio.currentTime > 0) {
-        audio.play();
+  var audioSelector = document.querySelector('#audio-selector');
+  var audioSelectorInput = audioSelector.querySelector('input');
+  var audioSelectorButton = audioSelector.querySelector('button');
+
+  audioSelector.addEventListener('submit', toggle);
+
+  function toggle(e) {
+    e.preventDefault();
+    var audioKey = audioSelectorInput.value;
+    togglePlaying(audioKey);
+  }
+
+  function togglePlaying(audioKey) {
+    for(let track of playlist) {
+      if(audioKey == track.getAttribute('data-key')) {
+        track.paused ? track.play() : track.pause();
+      } else {
+        track.currentTime = 0;
+        track.pause();
       }
     }
   }
 
   function audioEvent(e) {
     console.log(e);
+    audioSelectorButton.focus();
+
     switch (e.type) {
+      case 'playing':
       case 'play':
-        audioSelectorButton.blur();
-        audioPlayback.querySelector('span').innerHTML = e.target.getAttribute('data-key');
-        audioPlayback.classList.remove("hidden");
-        audioPlaybackToggleButton.innerHTML = audioPlaybackToggleButton.getAttribute('data-pause-icon');
+        audioSelectorInput.disabled = true;
+        audioSelectorButton.innerHTML = audioSelectorButton.getAttribute('data-pause-icon');
         break;
       case 'pause':
-        audioPlaybackToggleButton.innerHTML = audioPlaybackToggleButton.getAttribute('data-play-icon');
+        audioSelectorInput.disabled = false;
+        audioSelectorButton.innerHTML = audioSelectorButton.getAttribute('data-play-icon');
         break;
       case 'ended':
-        audioPlayback.classList.add('hidden');
         break;
     }
   }
-
-  function play(e) {
-    e.preventDefault();
-    const audioKey = e.srcElement.querySelector('input').value;
-    playAudio(audioKey);
-  }
-
-  function toggle(e) {
-    e.preventDefault();
-    togglePlaying();
-  }
-
-  const audios = document.querySelectorAll('audio');
-  const audioSelector = document.querySelector('#audio-selector');
-  const audioSelectorInput = audioSelector.querySelector('input');
-  const audioSelectorButton = audioSelector.querySelector('button');
-  const audioPlayback = document.querySelector('#audio-player');
-  const audioPlaybackToggleButton = audioPlayback.querySelector('button');
-
-  audioSelector.addEventListener('submit', play);
-  audioPlaybackToggleButton.addEventListener('click', toggle);
-  
-
-  audios.forEach(audio => {
-    audio.addEventListener('play', audioEvent);
-    audio.addEventListener('pause', audioEvent);
-    audio.addEventListener('ended', audioEvent)
-  });
-
-  // function removeTransition(e) {
-  //   if (e.propertyName === 'transform') {
-  //     e.target.classList.remove('playing');
-  //   }
-  // }
-
-  // function playSound(keyCode) {
-  //   console.log(keyCode);
-  //   const audio = document.querySelector(`audio[data-key="${keyCode}"]`);
-  //   const key = document.querySelector(`div[data-key="${keyCode}"]`);
-
-  //   console.log(audio);
-
-  //   if (audio) {
-  //     key.classList.add('playing');
-  //     audio.currentTime = 0;
-  //     audio.play();
-  //   }
-  // }
-  
-  // function onKeydown(e) {
-  //   console.log(e);
-  //   playSound(e.code);
-  // }
-
-  // function onClick(e) {
-  //   const keyCode = this.getAttribute('data-key');
-  //   playSound(keyCode);
-  // }
-
-  // const keys = document.querySelectorAll('.key');
-  // keys.forEach(key => {
-  //   key.addEventListener('transitionend', removeTransition);
-  //   key.addEventListener('click', onClick);
-  // });
-
-  // window.addEventListener('keydown', onKeydown);
 
 </script>
 
