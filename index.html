@@ -29,7 +29,8 @@
 
   var playlist = document.querySelectorAll('audio');
 
-  for(var track of playlist) {
+  for(var i = 0; i < playlist.length; i++) {
+    var track = playlist[i];
     track.addEventListener('play', audioEvent);
     track.addEventListener('playing', audioEvent);
     track.addEventListener('pause', audioEvent);
@@ -49,7 +50,8 @@
   }
 
   function togglePlaying(audioKey) {
-    for(var track of playlist) {
+    for(var i = 0; i < playlist.length; i++) {
+      var track = playlist[i];
       if(audioKey == track.getAttribute('data-key')) {
         track.paused ? track.play() : track.pause();
       } else {
